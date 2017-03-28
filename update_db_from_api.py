@@ -25,18 +25,18 @@ def get_stu_index():
 	j = len(ls)-1
 	t = 0
 	for (start,end) in VALUE:
-	    m = ls.index(start, i, j)
-	    n = ls.index(end, i, j)
-	    
-	    i = n + 6
-	    stu_list[AREA[t]] = ls[m:i]
-	    t = t + 1
+		m = ls.index(start, i, j)
+		n = ls.index(end, i, j)
+		
+		i = n + 6
+		stu_list[AREA[t]] = ls[m:i]
+		t = t + 1
 
 	github_user = [] #github username of the students
 	for area in AREA:
-	    length = len(stu_list[area])
-	    for i in range(1,length,7):
-	        github_user.append((stu_list[area][i],area))
+		length = len(stu_list[area])
+		for i in range(1,length,7):
+			github_user.append((stu_list[area][i],area))
 	return github_user
 
 
@@ -59,34 +59,34 @@ def submit_task_issue(ISSUE_NUMBER,payload):
 	print(ls)
 
 def traverse_pages(payload):
-    '''travesing all pages, return a list including all pages'''
-    url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
-    s = requests.session()
-    s.auth = (USERNAME,PASSWORD)
-    r = s.get(url,params = payload)
-    li = r.headers["Link"]
-    next_url=li[(li.index("<") + 1):li.index(">")]
-    result = json.loads(r.text)
-    ls = []
-    ls.append(result)      
-    while True:
-        r = s.get(next_url,params = payload)
-        result = json.loads(r.text)
-        ls.append(result)
-        link = r.headers['Link']
-        if 'next' not in link:
-            break
-        next_url=link[(link.index("<") + 1):link.index(">")]
-    return ls
+	'''travesing all pages, return a list including all pages'''
+	url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
+	s = requests.session()
+	s.auth = (USERNAME,PASSWORD)
+	r = s.get(url,params = payload)
+	li = r.headers["Link"]
+	next_url=li[(li.index("<") + 1):li.index(">")]
+	result = json.loads(r.text)
+	ls = []
+	ls.append(result)      
+	while True:
+		r = s.get(next_url,params = payload)
+		result = json.loads(r.text)
+		ls.append(result)
+		link = r.headers['Link']
+		if 'next' not in link:
+			break
+		next_url=link[(link.index("<") + 1):link.index(">")]
+	return ls
 
 def get_all_issues(payload):
-    ls = traverse_pages(payload)
-    issue_ls = []
-    for page in ls:
-        for x in page:
-            m = [x["title"],x["number"],x['user']['login'],x['comments']]
-            issue_ls.append(m)
-    return issue_ls
+	ls = traverse_pages(payload)
+	issue_ls = []
+	for page in ls:
+		for x in page:
+			m = [x["title"],x["number"],x['user']['login'],x['comments']]
+			issue_ls.append(m)
+	return issue_ls
 
 def issues_static(payload):
 	issue_info = get_all_issues(payload)
