@@ -92,19 +92,26 @@ Github UserName:<input type="text" name="UserName">
     <div align= 'left'>
     <p>您的数据情况为
     {% for stat in result[2] %}
-  
+        {% for m in stat[1:2] %}
 
-            {{stat}}
+            <p>Addition:{{stat[1]}}</p>
 
+            <p>Deletion:{{stat[2]}}</p>
+
+
+        {% endfor %}
+        {% for n in stat[-1:] %}
+            <p>Commits:{{n}}</p>
+        {% endfor %}
     {% endfor %}
     </p>
     <p>您发布的issue（包括创建的，和评论回复）总数为
     {% for count in result[-1:] %}
-        {{count}}
+        {{count}}条。
     {% endfor %}
-    </p>
     
-    <p>其中，您创建issue的情况：</br>
+    
+    其中，您创建issue的详细情况：</br>
     {% for k in result[1] %}
         <ul> 
         <li>编号为{{k[0]}}的issue共有{{k[2]}}条comment</li></br>
